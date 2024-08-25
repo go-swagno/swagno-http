@@ -3,6 +3,14 @@ module github.com/go-swagno/swagno-http
 go 1.18
 
 require (
+	github.com/go-swagno/swagno v1.2.0
 	github.com/go-swagno/swagno-files v0.1.3
-	golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b
+	github.com/stretchr/testify v1.9.0
+)
+
+require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	golang.org/x/net v0.28.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

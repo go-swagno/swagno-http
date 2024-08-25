@@ -5,34 +5,37 @@ import (
 	"net/http"
 
 	swaggerUi "github.com/go-swagno/swagno-files"
-	"golang.org/x/net/webdav"
 )
 
 type Config struct {
 	Prefix string
 }
 
-var swaggerDoc string
-
-var handler *webdav.Handler
-
 var defaultConfig = Config{
 	Prefix: "/swagger",
 }
 
-func SwaggerHandler(doc []byte, config ...Config) http.HandlerFunc {
-	if len(config) != 0 {
-		defaultConfig = config[0]
+type optFunc func(*Config)
+
+func WithPrefix(prefix string) optFunc {
+	return func(c *Config) {
+		c.Prefix = prefix
 	}
-	if swaggerDoc == "" {
-		swaggerDoc = string(doc)
-	}
-	if handler == nil {
-		handler = swaggerUi.Handler
+}
+
+func SwaggerHandler(doc []byte, opts ...optFunc) http.HandlerFunc {
+	conf := defaultConfig
+
+	for _, opt := range opts {
+		opt(&conf)
 	}
 
+	swaggerDoc := string(doc)
+
+	handler := swaggerUi.Handler
+
 	return func(w http.ResponseWriter, r *http.Request) {
-		prefix := defaultConfig.Prefix
+		prefix := conf.Prefix
 		handler.Prefix = prefix
 
 		switch r.RequestURI {
